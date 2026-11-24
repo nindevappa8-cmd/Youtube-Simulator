@@ -1,0 +1,273 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Global safety net: deny everything by default
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Core primitives
+    function isSignedIn() {
+      return request.auth != null && request.auth.token.firebase.sign_in_provider != 'anonymous';
+    }
+
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    function isValidId(id) {
+      return id is string && id.size() >= 1 && id.size() <= 128 && id.matches('^[a-zA-Z0-9_\\-]+$');
+    }
+
+    function incoming() {
+      return request.resource.data;
+    }
+
+    function existing() {
+      return resource.data;
+    }
+
+    function isValidDisplayId(val) {
+      return val is string && val.size() >= 11 && val.size() <= 16 && val.matches('^GF-[A-Z0-9]{8}$');
+    }
+
+    function isValidStringList(arr, maxLen) {
+      return arr is list && arr.size() <= maxLen && (arr.size() == 0 || arr[0] is string);
+    }
+
+    function isValidInventory(inv) {
+      return inv is map
+        && inv.keys().hasAll(['laptops', 'gpus', 'games', 'editors', 'installedGames', 'activeLaptopId', 'laptopGpus'])
+        && inv.keys().hasOnly(['laptops', 'gpus', 'games', 'editors', 'installedGames', 'activeLaptopId', 'laptopGpus'])
+        && isValidStringList(inv.laptops, 16)
+        && isValidStringList(inv.gpus, 20)
+        && isValidStringList(inv.games, 20)
+        && isValidStringList(inv.editors, 16)
+        && isValidStringList(inv.installedGames, 20)
+        && (inv.activeLaptopId == null || (inv.activeLaptopId is string && inv.activeLaptopId.size() <= 64))
+        && inv.laptopGpus is map && inv.laptopGpus.size() <= 16;
+    }
+
+    function isValidSettings(s) {
+      return s is map
+        && s.keys().hasAll(['soundEnabled', 'soundVolume'])
+        && s.keys().hasOnly(['soundEnabled', 'soundVolume'])
+        && s.soundEnabled is bool
+        && s.soundVolume is number && s.soundVolume >= 0 && s.soundVolume <= 1;
+    }
+
+    function isValidUserProfile(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'displayId', 'username', 'email', 'avatarId', 'accountStatus',
+          'balance', 'totalEarned', 'totalSpent', 'lifetimeVideoEarnings',
+          'subscribers', 'totalViews', 'totalVideos', 'rank', 'tier',
+          'badges', 'inventory', 'settings', 'recentSubscribers',
+          'createdAt', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'displayId', 'username', 'email', 'avatarId', 'accountStatus',
+          'balance', 'totalEarned', 'totalSpent', 'lifetimeVideoEarnings',
+          'subscribers', 'totalViews', 'totalVideos', 'rank', 'tier',
+          'badges', 'inventory', 'settings', 'recentSubscribers',
+          'lastTransactionId', 'createdAt', 'updatedAt'
+        ])
+        && data.uid == userId
+        && isValidId(data.uid)
+        && isValidDisplayId(data.displayId)
+        && data.username is string && data.username.size() >= 2 && data.username.size() <= 32
+        && data.email is string && data.email.size() >= 5 && data.email.size() <= 120
+        && data.avatarId is string && data.avatarId.size() >= 1 && data.avatarId.size() <= 40
+        && data.accountStatus == 'active'
+        && data.balance is number && data.balance >= 0 && data.balance <= 1000000000000
+        && data.totalEarned is number && data.totalEarned >= 0 && data.totalEarned <= 1000000000000
+        && data.totalSpent is number && data.totalSpent >= 0 && data.totalSpent <= 1000000000000
+        && data.lifetimeVideoEarnings is number && data.lifetimeVideoEarnings >= 0 && data.lifetimeVideoEarnings <= 1000000000000
+        && data.subscribers is number && data.subscribers >= 0 && data.subscribers <= 100000000000
+        && data.totalViews is number && data.totalViews >= 0 && data.totalViews <= 1000000000000
+        && data.totalVideos is number && data.totalVideos >= 0 && data.totalVideos <= 1000000
+        && data.rank is string && data.rank.size() >= 1 && data.rank.size() <= 32
+        && data.tier is string && data.tier.size() >= 1 && data.tier.size() <= 32
+        && isValidStringList(data.badges, 20)
+        && isValidInventory(data.inventory)
+        && isValidSettings(data.settings)
+        && data.recentSubscribers is list && data.recentSubscribers.size() <= 10
+        && (data.recentSubscribers.size() == 0 || data.recentSubscribers[0] is map)
+        && (!('lastTransactionId' in data) || (data.lastTransactionId is string && data.lastTransactionId.size() <= 128))
+        && data.createdAt is timestamp
+        && data.updatedAt is timestamp;
+    }
+
+    function isInitialUserState(data) {
+      return data.balance == 5000
+        && data.totalEarned == 0
+        && data.totalSpent == 0
+        && data.lifetimeVideoEarnings == 0
+        && data.subscribers == 0
+        && data.totalViews == 0
+        && data.totalVideos == 0
+        && data.rank == 'Zero'
+        && data.tier == 'No Tier'
+        && data.badges.size() == 0
+        && data.inventory.laptops.size() == 0
+        && data.inventory.gpus.size() == 0
+        && data.inventory.games.size() == 0
+        && data.inventory.editors.size() == 0
+        && data.inventory.installedGames.size() == 0
+        && data.inventory.activeLaptopId == null
+        && data.recentSubscribers.size() == 0;
+    }
+
+    function isValidVideoRecord(data, userId, videoId) {
+      return data.keys().hasAll([
+          'id', 'uid', 'uploadNonce', 'title', 'gameId', 'gameName',
+          'editorId', 'editorName', 'laptopId', 'gpuId',
+          'views', 'subscribersGained', 'earnings', 'outcomeTier', 'createdAt'
+        ])
+        && data.keys().hasOnly([
+          'id', 'uid', 'uploadNonce', 'title', 'gameId', 'gameName',
+          'editorId', 'editorName', 'laptopId', 'gpuId',
+          'views', 'subscribersGained', 'earnings', 'outcomeTier', 'createdAt'
+        ])
+        && data.id == videoId
+        && data.uid == userId
+        && data.uploadNonce is string && data.uploadNonce.size() >= 8 && data.uploadNonce.size() <= 128
+        && data.title is string && data.title.size() >= 1 && data.title.size() <= 100
+        && data.gameId is string && data.gameId.size() >= 1 && data.gameId.size() <= 64
+        && data.gameName is string && data.gameName.size() >= 1 && data.gameName.size() <= 64
+        && data.editorId is string && data.editorId.size() >= 1 && data.editorId.size() <= 64
+        && data.editorName is string && data.editorName.size() >= 1 && data.editorName.size() <= 64
+        && data.laptopId is string && data.laptopId.size() >= 1 && data.laptopId.size() <= 64
+        && data.gpuId is string && data.gpuId.size() >= 1 && data.gpuId.size() <= 64
+        && data.views is number && data.views >= 1 && data.views <= 100000000
+        && data.subscribersGained is number && data.subscribersGained >= 0 && data.subscribersGained <= 10000000
+        && data.earnings is number && data.earnings >= 0 && data.earnings <= 100000000
+        && (data.outcomeTier == 'lowest' || data.outcomeTier == 'highest')
+        && data.createdAt is timestamp;
+    }
+
+    function isValidTransactionRecord(data, userId, txId) {
+      return data.keys().hasAll(['id', 'uid', 'type', 'itemId', 'amount', 'createdAt'])
+        && data.keys().hasOnly(['id', 'uid', 'type', 'itemId', 'amount', 'createdAt'])
+        && data.id == txId
+        && data.uid == userId
+        && data.type in ['purchase', 'upload_reward', 'install', 'uninstall', 'equip_gpu', 'equip_laptop']
+        && data.itemId is string && data.itemId.size() >= 1 && data.itemId.size() <= 64
+        && data.amount is number && data.amount >= 0 && data.amount <= 1000000000
+        && data.createdAt is timestamp;
+    }
+
+    function isValidLeaderboardEntry(data, userId) {
+      return data.keys().hasAll([
+          'uid', 'displayId', 'username', 'avatarId',
+          'subscribers', 'rank', 'tier', 'totalVideos', 'updatedAt'
+        ])
+        && data.keys().hasOnly([
+          'uid', 'displayId', 'username', 'avatarId',
+          'subscribers', 'rank', 'tier', 'totalVideos', 'updatedAt'
+        ])
+        && data.uid == userId
+        && isValidId(data.uid)
+        && isValidDisplayId(data.displayId)
+        && data.username is string && data.username.size() >= 2 && data.username.size() <= 32
+        && data.avatarId is string && data.avatarId.size() >= 1 && data.avatarId.size() <= 40
+        && data.subscribers is number && data.subscribers >= 0 && data.subscribers <= 100000000000
+        && data.rank is string && data.rank.size() >= 1 && data.rank.size() <= 32
+        && data.tier is string && data.tier.size() >= 1 && data.tier.size() <= 32
+        && data.totalVideos is number && data.totalVideos >= 0 && data.totalVideos <= 1000000
+        && data.updatedAt is timestamp;
+    }
+
+    // Connection health check document (read-only)
+    match /test/connection {
+      allow get: if true;
+    }
+
+    // Private user profiles (PII isolated: owner-only read/write, no collection listing)
+    match /users/{userId} {
+      allow get: if isValidId(userId) && isOwner(userId);
+      allow list: if false;
+
+      allow create: if isValidId(userId)
+        && isOwner(userId)
+        && isValidUserProfile(incoming(), userId)
+        && isInitialUserState(incoming())
+        && incoming().createdAt == request.time
+        && incoming().updatedAt == request.time;
+
+      allow update: if isValidId(userId)
+        && isOwner(userId)
+        && isValidUserProfile(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().displayId == existing().displayId
+        && incoming().createdAt == existing().createdAt
+        && incoming().updatedAt == request.time
+        && (
+          // Action: Profile & settings update
+          (incoming().diff(existing()).affectedKeys().hasOnly(['username', 'avatarId', 'email', 'settings', 'updatedAt'])) ||
+          // Action: Store purchase or hardware management
+          (incoming().diff(existing()).affectedKeys().hasOnly(['balance', 'totalSpent', 'inventory', 'lastTransactionId', 'updatedAt'])
+            && incoming().totalSpent >= existing().totalSpent) ||
+          // Action: Video upload reward & progression
+          (incoming().diff(existing()).affectedKeys().hasOnly([
+            'balance', 'totalEarned', 'lifetimeVideoEarnings',
+            'subscribers', 'totalViews', 'totalVideos',
+            'rank', 'tier', 'badges', 'recentSubscribers',
+            'lastTransactionId', 'updatedAt'
+          ])
+            && incoming().totalEarned >= existing().totalEarned
+            && incoming().lifetimeVideoEarnings >= existing().lifetimeVideoEarnings
+            && incoming().subscribers >= existing().subscribers
+            && incoming().totalViews >= existing().totalViews
+            && incoming().totalVideos == existing().totalVideos + 1)
+        );
+
+      allow delete: if isValidId(userId) && isOwner(userId);
+
+      // Subcollection: Uploaded Videos (atomically paired with parent lastTransactionId)
+      match /videos/{videoId} {
+        allow get: if isValidId(userId) && isValidId(videoId) && isOwner(userId);
+        allow list: if isOwner(userId) && resource.data.uid == request.auth.uid;
+        allow create: if isValidId(userId) && isValidId(videoId) && isOwner(userId)
+          && isValidVideoRecord(incoming(), userId, videoId)
+          && incoming().createdAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId))
+          && getAfter(/databases/$(database)/documents/users/$(userId)).data.lastTransactionId == incoming().uploadNonce;
+        allow update: if false;
+        allow delete: if isValidId(userId) && isValidId(videoId) && isOwner(userId);
+      }
+
+      // Subcollection: Idempotent Economic Transactions
+      match /transactions/{txId} {
+        allow get: if isValidId(userId) && isValidId(txId) && isOwner(userId);
+        allow list: if isOwner(userId) && resource.data.uid == request.auth.uid;
+        allow create: if isValidId(userId) && isValidId(txId) && isOwner(userId)
+          && isValidTransactionRecord(incoming(), userId, txId)
+          && incoming().createdAt == request.time
+          && exists(/databases/$(database)/documents/users/$(userId));
+        allow update: if false;
+        allow delete: if isValidId(userId) && isValidId(txId) && isOwner(userId);
+      }
+    }
+
+    // Public global leaderboard (no PII, owner-maintained, sorted by subscribers)
+    match /globalLeaderboard/{userId} {
+      allow get: if isValidId(userId) && isSignedIn();
+      allow list: if isSignedIn() && resource.data.subscribers >= 0;
+      allow create: if isValidId(userId)
+        && isOwner(userId)
+        && isValidLeaderboardEntry(incoming(), userId)
+        && incoming().updatedAt == request.time;
+      allow update: if isValidId(userId)
+        && isOwner(userId)
+        && isValidLeaderboardEntry(incoming(), userId)
+        && incoming().uid == existing().uid
+        && incoming().displayId == existing().displayId
+        && incoming().updatedAt == request.time
+        && incoming().diff(existing()).affectedKeys().hasOnly([
+          'username', 'avatarId', 'subscribers', 'rank', 'tier', 'totalVideos', 'updatedAt'
+        ]);
+      allow delete: if isValidId(userId) && isOwner(userId);
+    }
+  }
+}

@@ -1,0 +1,98 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+@layer base {
+  :root {
+    --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    --font-display: 'Outfit', 'Plus Jakarta Sans', sans-serif;
+    --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, monospace;
+  }
+
+  html,
+  body {
+    background-color: #080808;
+    color: #ffffff;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+  }
+
+  .tabular-nums {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Selective gradient borders */
+.border-grad-selected {
+  position: relative;
+  background: linear-gradient(#171717, #171717) padding-box,
+              linear-gradient(135deg, #ff2020 0%, #580b0b 55%, #ff2020 100%) border-box;
+  border: 1px solid transparent;
+}
+
+.border-grad-legendary {
+  position: relative;
+  background: linear-gradient(#171717, #171717) padding-box,
+              linear-gradient(135deg, #fbbf24 0%, #92400e 50%, #fde68a 100%) border-box;
+  border: 1px solid transparent;
+}
+
+.border-grad-mythic {
+  position: relative;
+  background: linear-gradient(#171717, #171717) padding-box,
+              linear-gradient(135deg, #ff2020 0%, #1a0505 50%, #b91c1c 100%) border-box;
+  border: 1px solid transparent;
+}
+
+@keyframes prismaticShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.border-grad-special {
+  position: relative;
+  background: linear-gradient(#171717, #171717) padding-box,
+              linear-gradient(120deg, #ff2020, #f59e0b, #20d878, #38bdf8, #a855f7, #ff2020) border-box;
+  background-size: 100% 100%, 260% 260%;
+  animation: prismaticShift 6s ease infinite;
+  border: 1px solid transparent;
+}
+
+.rank-rainbow {
+  background: linear-gradient(90deg, #ff2020, #f59e0b, #20d878, #38bdf8, #a855f7, #ff2020);
+  background-size: 220% 220%;
+  animation: prismaticShift 5s ease infinite;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Custom sleek dark scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #080808;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #27272a;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #3f3f46;
+}

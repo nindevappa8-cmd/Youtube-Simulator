@@ -1,0 +1,6 @@
+{
+  "name": "YouTube Studio",
+  "description": "Full-featured YouTube creator simulator with persistent cloud accounts, 3D hardware store, dynamic market stock, studio uploads, and global leaderboards.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

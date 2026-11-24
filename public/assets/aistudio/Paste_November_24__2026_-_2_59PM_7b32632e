@@ -1,0 +1,1526 @@
+# YOUTUBE STUDIO
+## COMPLETE GAME DEVELOPMENT MASTER PROMPT
+### Created by Geforce
+
+**PROJECT:** YouTube Studio  
+**PLATFORM:** Google AI Studio  
+**TYPE:** Full YouTube Creator Simulator  
+**STARTING BALANCE:** $5,000  
+**DESIGN:** Premium Apple-inspired UI with a red-and-black identity.
+
+---
+
+# 0. ABSOLUTE RULES — NEVER VIOLATE
+
+These rules apply to the entire project.
+
+## RULE 1 — ZERO EMOJIS. NEVER.
+
+NEVER USE EMOJIS ANYWHERE.
+
+This is a permanent project-wide restriction.
+
+Do not use emojis in:
+
+- Homepage.
+- Navigation.
+- Buttons.
+- Notifications.
+- Error messages.
+- Success messages.
+- Store.
+- Laptop cards.
+- GPU cards.
+- Game cards.
+- Editor cards.
+- Ranks.
+- Tiers.
+- Badges.
+- Leaderboards.
+- Profiles.
+- Authentication pages.
+- Loading screens.
+- Empty states.
+- Tooltips.
+- Confirmation dialogs.
+- Sound settings.
+- Any other interface.
+
+Use professional icons, CSS shapes, typography and custom SVG icons instead.
+
+Do not substitute emojis for icons.
+
+Examples:
+
+WRONG:
+- Laptop emoji.
+- Gaming emoji.
+- Money emoji.
+- Trophy emoji.
+
+CORRECT:
+- Custom laptop SVG.
+- Custom GPU icon.
+- Custom currency icon.
+- Custom achievement icon.
+
+Search the entire codebase for emoji characters before declaring the project complete.
+
+## RULE 2 — REAL FUNCTIONALITY
+
+This is NOT a visual prototype.
+
+Every button must work.
+
+Every purchase must update real player data.
+
+Every upload must calculate real results.
+
+Every account must persist.
+
+Every leaderboard must use actual saved player data.
+
+Never create fake functionality.
+
+## RULE 3 — NEVER DESTROY EXISTING SYSTEMS
+
+When implementing a new feature:
+
+1. Inspect the existing project.
+2. Identify its dependencies.
+3. Understand the existing database structure.
+4. Preserve working functionality.
+5. Implement the new feature.
+6. Test the affected systems.
+7. Test previously working systems again.
+
+Never rewrite an entire working system unnecessarily.
+
+## RULE 4 — FIX BUGS, DO NOT HIDE THEM
+
+When a bug appears:
+
+- Identify its actual cause.
+- Explain why it happens.
+- Fix the underlying logic.
+- Test the fix.
+- Check whether the fix breaks another system.
+
+Do not hide errors using fake success messages.
+
+---
+
+# 1. PROJECT DESIGN
+
+Create a premium dark gaming interface.
+
+## Color palette
+
+- Main background: #080808.
+- Secondary background: #111111.
+- Cards: #171717.
+- Primary text: #FFFFFF.
+- Secondary text: #A0A0A0.
+- Accent red: #FF2020.
+- Green: #20D878.
+- Error red: #FF3535.
+- Borders: Dark grey.
+
+## Red-black gradient borders
+
+Use red gradient borders selectively.
+
+Examples:
+
+- Normal cards: Dark grey border.
+- Selected cards: Red gradient border.
+- Legendary products: Gold gradient border.
+- Mythic products: Red-black gradient border.
+- Special products: Animated gradient border.
+
+Avoid excessive glow.
+
+## Typography
+
+Use a modern sans-serif font.
+
+- Headings: Bold white.
+- Descriptions: Soft grey.
+- Prices: White.
+- Earnings: Green.
+- Warnings: Red.
+
+## Animation
+
+Use smooth Apple-inspired animations.
+
+### Buttons
+
+- Slight scale-down on click.
+- Smooth return to original size.
+- Subtle highlight.
+- Optional click sound.
+
+### Cards
+
+- Slight upward movement on hover.
+- Smooth border transitions.
+- Soft shadows.
+
+### Popups
+
+- Fade in.
+- Scale from approximately 96% to 100%.
+- Smooth closing animation.
+
+### Page transitions
+
+- Smooth fade.
+- Small vertical movement.
+- No full-page reload when navigating internally.
+
+## Sound effects
+
+Create a centralized sound manager.
+
+Sounds:
+
+- Button click.
+- Purchase confirmation.
+- Purchase failure.
+- Upload start.
+- Upload completion.
+- Rank increase.
+- Badge unlock.
+
+Include a sound toggle.
+
+Prevent duplicate sound playback during rerenders.
+
+---
+
+# 2. AUTHENTICATION SYSTEM — EXTREMELY IMPORTANT
+
+This is one of the highest-priority systems in the entire project.
+
+The previous project had a serious authentication failure:
+
+1. User signed up successfully.
+2. User logged out.
+3. User attempted to log in again.
+4. System displayed Account Not Found.
+5. The Gmail was not registered in the authentication database.
+
+This must NEVER happen again.
+
+The new project must use genuine persistent authentication.
+
+Do not build a fake frontend login system.
+
+Do not create temporary accounts stored only in browser state.
+
+Do not pretend an account has been created when the backend has not confirmed successful registration.
+
+## A. Authentication provider
+
+Use Firebase Authentication with persistent cloud authentication, or an equivalent genuine authentication provider if Firebase cannot be used in the environment.
+
+Use:
+
+- Email and password authentication.
+- Gmail address validation.
+- Persistent authentication sessions.
+- Unique user IDs.
+- Account deletion.
+- Secure password handling.
+
+Use the actual authentication provider's supported APIs.
+
+Never store plaintext passwords.
+
+Never store passwords in localStorage.
+
+Never implement a fake Gmail login using only a regular expression.
+
+## B. Gmail registration
+
+Create a professional Sign Up page.
+
+Fields:
+
+1. Username.
+2. Gmail address.
+3. Password.
+4. Confirm password.
+
+### Gmail restrictions
+
+Only allow Gmail addresses.
+
+Accept valid addresses ending in:
+
+@gmail.com
+
+Reject:
+
+- @yahoo.com
+- @outlook.com
+- @hotmail.com
+- Invalid email formats.
+- Empty addresses.
+- Incorrectly formatted addresses.
+
+### Gmail existence requirement
+
+The Gmail address must be an actual registered Google email address.
+
+Do not assume that an address exists just because it ends with @gmail.com.
+
+Use a genuine supported verification or identity-validation mechanism.
+
+Important technical distinction:
+
+A Gmail address cannot be reliably proven to exist using only frontend validation or an email-format regular expression.
+
+Without an email verification step, the application cannot guarantee that the user owns the address.
+
+Because email verification codes are not wanted, do not implement an email OTP workflow.
+
+Instead, clearly distinguish:
+
+- Format validation.
+- Authentication account creation.
+- Verified Gmail ownership.
+
+If the authentication provider cannot confirm Gmail existence or ownership without email verification or Google sign-in, explain this limitation and offer Google account sign-in as the ownership-confirmation method.
+
+Never falsely claim that an unverified address is confirmed to exist.
+
+## C. Account creation
+
+When the user clicks Create Account:
+
+Execute these steps in order.
+
+1. Validate username.
+2. Validate Gmail format.
+3. Validate password.
+4. Validate password confirmation.
+5. Check whether the account already exists.
+6. Create a genuine authentication-provider account.
+7. Receive the permanent authentication UID.
+8. Create the player's database record using that UID.
+9. Save the username.
+10. Save the Gmail address.
+11. Initialize player statistics.
+12. Initialize starting balance.
+13. Initialize rank and tier.
+14. Initialize inventory.
+15. Initialize progression.
+16. Confirm the database write.
+17. Only then display successful registration.
+
+### Permanent user ID
+
+Every account must receive a unique permanent user ID.
+
+Example:
+
+User ID:
+
+GF-8X29KQ71
+
+The actual ID must be generated uniquely, not copied from this example.
+
+Use the authentication provider's UID as the authoritative account identifier.
+
+The display ID can be generated separately.
+
+### Account database structure
+
+Create a persistent users collection.
+
+Each user record should contain:
+
+- uid
+- displayId
+- username
+- email
+- createdAt
+- accountStatus
+- balance
+- totalEarned
+- totalSpent
+- subscribers
+- totalViews
+- totalVideos
+- rank
+- tier
+- badges
+- inventory
+- settings
+
+The UID must be the primary relationship key for all player data.
+
+Never use the username as the unique account identifier.
+
+Never use the Gmail address as the only player-data identifier.
+
+### Initial account values
+
+For a brand-new account:
+
+Balance: $5,000.
+
+Total earnings: $0.
+
+Total spending: $0.
+
+Subscribers: 0.
+
+Views: 0.
+
+Videos: 0.
+
+Rank: Zero.
+
+Tier: No Tier.
+
+Badges: Empty.
+
+Owned laptops: Empty.
+
+Owned GPUs: Empty.
+
+Owned games: Empty.
+
+Owned editors: Empty.
+
+Installed games: Empty.
+
+## D. CRITICAL DATABASE TRANSACTION
+
+Account creation must not finish until both authentication and the player profile have been created successfully.
+
+Use a reliable registration workflow.
+
+Example:
+
+```javascript
+const credential = await createUserWithEmailAndPassword(
+  auth,
+  email,
+  password
+);
+
+const user = credential.user;
+
+const playerProfile = {
+  uid: user.uid,
+  displayId: generateUniqueDisplayId(),
+  username,
+  email: user.email,
+  createdAt: serverTimestamp(),
+  balance: 5000,
+  totalEarned: 0,
+  totalSpent: 0,
+  subscribers: 0,
+  totalViews: 0,
+  totalVideos: 0,
+  rank: "Zero",
+  tier: "No Tier",
+  badges: [],
+  inventory: {
+    laptops: [],
+    gpus: [],
+    games: [],
+    editors: [],
+    installedGames: []
+  }
+};
+
+await setDoc(
+  doc(db, "users", user.uid),
+  playerProfile
+);
+```
+
+This is an implementation example. Adapt it to the actual database SDK and existing architecture.
+
+IMPORTANT:
+
+Authentication creation and database profile creation are separate operations.
+
+If authentication succeeds but database profile creation fails:
+
+- Do not pretend the account was never created.
+- Do not create another authentication account.
+- Attempt safe profile recovery.
+- Keep the authenticated user session.
+- Retry the missing profile write.
+- Display a clear error if recovery fails.
+- Ensure the next login can recover or initialize the missing profile safely.
+
+Never create duplicate user records.
+
+## E. LOGIN SYSTEM — FIX THE PREVIOUS BUG
+
+Login must work after logging out.
+
+This is mandatory.
+
+Create a proper login form:
+
+- Gmail address.
+- Password.
+- Login button.
+- Forgot password.
+- Sign Up link.
+
+When the user logs in:
+
+1. Validate Gmail format.
+2. Call the real authentication provider.
+3. Authenticate using the entered Gmail and password.
+4. Retrieve the actual authenticated UID.
+5. Fetch the database player profile using that UID.
+6. Confirm the profile exists.
+7. Load saved player data.
+8. Restore inventory.
+9. Restore money.
+10. Restore subscribers.
+11. Restore videos.
+12. Restore progression.
+13. Open the homepage.
+
+### CRITICAL: NEVER SEARCH BY TEMPORARY FRONTEND DATA
+
+Do not check whether the account exists only in localStorage.
+
+Do not check a temporary JavaScript user array.
+
+Do not generate a new UID every time someone logs in.
+
+Do not use username-based authentication.
+
+Always use the authenticated UID.
+
+Example:
+
+```javascript
+const credential = await signInWithEmailAndPassword(
+  auth,
+  email,
+  password
+);
+
+const user = credential.user;
+
+const profileRef = doc(db, "users", user.uid);
+
+const profileSnapshot = await getDoc(profileRef);
+
+if (!profileSnapshot.exists()) {
+  // Attempt safe profile recovery.
+  // Never silently create a second account.
+  // Never report successful login without loading valid player data.
+}
+```
+
+The example must be integrated with proper error handling and recovery logic.
+
+### Login persistence
+
+When a player logs in:
+
+- Save authentication through the provider's persistent session mechanism.
+- Do not depend on a temporary component state.
+- Restore the session after browser refresh.
+- Restore the account after closing and reopening the browser.
+- Load the correct profile.
+
+When the player logs out:
+
+- Sign out using the real authentication provider.
+- Clear temporary in-memory player state.
+- Clear cached sensitive account data.
+- Return to the login page.
+
+Do not delete the database account when logging out.
+
+### CRITICAL LOGIN TEST
+
+This exact test is mandatory.
+
+TEST 1:
+
+1. Open the website.
+2. Create account using a Gmail address.
+3. Confirm account creation.
+4. Record the UID.
+5. Open the database.
+6. Confirm the player record exists.
+7. Log out.
+8. Enter the same Gmail.
+9. Enter the same password.
+10. Click Login.
+
+EXPECTED:
+
+- Login succeeds.
+- The exact same UID is retrieved.
+- The exact same player profile loads.
+- Balance remains $5,000 unless changed.
+- Inventory remains unchanged.
+- Subscriber count remains unchanged.
+- No Account Not Found error appears.
+
+TEST 2:
+
+1. Create account.
+2. Purchase a laptop.
+3. Upload a video.
+4. Earn money.
+5. Log out.
+6. Log back in.
+
+EXPECTED:
+
+All purchases, videos, earnings and progression remain saved.
+
+TEST 3:
+
+1. Create account.
+2. Refresh the browser.
+3. Close the browser.
+4. Reopen the website.
+
+EXPECTED:
+
+The existing session is restored according to the authentication persistence settings.
+
+If signed out, the player can still log in using the same Gmail and password.
+
+## F. ACCOUNT NOT FOUND ERROR HANDLING
+
+Show accurate errors.
+
+Examples:
+
+Invalid email format:
+
+"Enter a valid Gmail address."
+
+Wrong password:
+
+"Incorrect password."
+
+Account does not exist:
+
+"No account is registered with this Gmail address."
+
+Network failure:
+
+"Unable to connect. Please try again."
+
+Database profile missing:
+
+"Your account exists, but your player profile could not be loaded. Attempting recovery."
+
+Never show Account Not Found just because a profile request failed due to a network error.
+
+Never confuse authentication errors with database errors.
+
+## G. FORGOT PASSWORD
+
+Implement real password reset using the authentication provider.
+
+The user enters their Gmail address.
+
+Send the provider's legitimate password-reset email.
+
+Do not invent a fake password reset success.
+
+Display the correct result from the provider.
+
+## H. DELETE ACCOUNT
+
+Add Delete Account inside Profile Settings.
+
+Require confirmation.
+
+When the player confirms:
+
+1. Authenticate the user again if required.
+2. Confirm deletion intent.
+3. Delete associated player data.
+4. Delete video history.
+5. Delete private inventory data.
+6. Delete progression records.
+7. Delete the authentication account.
+8. Confirm successful deletion.
+9. Sign the user out.
+10. Return to the registration page.
+
+The user ID and associated account records must no longer be active after deletion.
+
+Use secure server-side deletion logic or the authentication provider's supported account deletion workflow.
+
+Handle deletion failures safely.
+
+Do not delete an account's data if authentication deletion is rejected unexpectedly without a recovery strategy.
+
+If deletion requires recent authentication, request reauthentication.
+
+IMPORTANT:
+
+Logging out must NEVER delete an account.
+
+Only the explicit Delete Account operation may delete the account.
+
+---
+
+# 3. GAME ECONOMY
+
+Starting balance: $5,000.
+
+Maintain separate variables:
+
+- balance
+- totalEarned
+- totalSpent
+- lifetimeVideoEarnings
+
+Starting balance is not lifetime earnings.
+
+Example:
+
+Starting balance = $5,000.
+
+Total earned = $0.
+
+Tier = No Tier.
+
+Spending does not reduce lifetime earnings.
+
+---
+
+# 4. NAVIGATION
+
+Create six main navigation sections:
+
+1. Homepage.
+2. Studio.
+3. Store.
+4. Profile.
+5. Leaderboards.
+6. Ranks.
+
+Use custom SVG icons, never emojis.
+
+Navigation must work without full page reloads.
+
+---
+
+# 5. HOMEPAGE
+
+Display:
+
+- Username.
+- Avatar.
+- Balance.
+- Subscribers.
+- Current rank.
+- Current tier.
+- Recent subscribers.
+- Last uploaded video.
+- Most popular videos.
+- Total views.
+- Lifetime earnings.
+- Total videos.
+
+All statistics must come from the persistent player database.
+
+---
+
+# 6. STUDIO
+
+Allow players to:
+
+- Create videos.
+- Select downloaded games.
+- Select editors.
+- Enter video titles.
+- Upload videos.
+- View upload progress.
+- Receive randomized video results.
+
+Validate hardware, GPU, installed games and editor ownership before uploading.
+
+Generate each upload exactly once.
+
+Save every completed video.
+
+---
+
+# 7. VIDEO VIEW GENERATION
+
+Use game view ranges, trend ranges and editor probabilities.
+
+Editor probabilities:
+
+| Editor | Lowest | Highest |
+|---|---:|---:|
+| Self-Editing | 95% | 5% |
+| Helper | 85% | 15% |
+| Advanced Helper | 65% | 35% |
+| Pre-Professional Helper | 50% | 50% |
+| Skilled Helper | 45% | 55% |
+| Professional Helper | 35% | 65% |
+| Ultra-Skilled Helper | 10% | 90% |
+
+Use weighted random selection.
+
+The editor controls the probability category, while the game controls the view range.
+
+Never confuse probability with view percentage.
+
+---
+
+# 8. SUBSCRIBERS
+
+Formula:
+
+subscribersGained = floor(views / 10)
+
+Examples:
+
+- 10 views = 1 subscriber.
+- 50 views = 5 subscribers.
+- 100 views = 10 subscribers.
+- 1,000 views = 100 subscribers.
+
+Never generate zero views.
+
+---
+
+# 9. EARNINGS
+
+Formula:
+
+earnings = views × $0.10 × gameMultiplier
+
+| Game | Multiplier |
+|---|---:|
+| Car Simulator | 1x |
+| Roblox | 1.2x |
+| Minecraft | 2x |
+| Maxed-Minecraft Mode | 5x |
+| GTA IV | 2.2x |
+| Car Simulator II | 2.5x |
+| Poppy Playtime 4 | 3x |
+| GTA V | 4x |
+| GTA VI | 5x |
+
+Use accurate decimal-safe calculations.
+
+---
+
+# 10. STORE AND STOCK
+
+Categories:
+
+- Laptops.
+- Laptop GPUs.
+- Games.
+- Editors.
+- Setup — Coming Soon.
+
+Refresh stock every 3 minutes.
+
+Use independent stock probability rolls.
+
+Display all products, even when unavailable or unaffordable.
+
+Never allow out-of-stock purchases.
+
+Use a persistent stock countdown.
+
+---
+
+# 11. LAPTOPS
+
+All laptops must have distinct designs.
+
+Starting laptop requirement:
+
+The player must purchase Geforce Mini Book before any other laptop can be purchased.
+
+After purchasing it, the player can purchase any laptop if they have enough money and it is in stock.
+
+| Laptop | Price | Rarity | Stock |
+|---|---:|---|---:|
+| Geforce Mini Book | $1,200 | Uncommon | 100% |
+| Geforce Mini Book Pro | $3,000 | Common | 80% |
+| Geforce Book | $5,000 | Rare | 50% |
+| Geforce 1st Gen | $10,000 | Epic | 25% |
+| Geforce Gaming | $20,000 | Legendary | 10% |
+| Geforce Gaming Pro | $25,000 | Mythic | 5% |
+| Geforce Ultra Gaming | $50,000 | Prismatic | 1% |
+| Geforce Maxed Gaming | $100,000 | Secret | 0.1% |
+
+### Specifications
+
+**Geforce Mini Book**
+- 250GB.
+- 2GB RAM.
+- 720p camera.
+- Intel Core i3.
+- Windows 10.
+- Small, thick laptop.
+- Small screen.
+- Large screen borders.
+
+**Geforce Mini Book Pro**
+- 500GB.
+- 4GB RAM.
+- 720p camera.
+- Intel Core i5.
+- Windows 10.
+- Small, thick body.
+- Slightly larger screen.
+- Smaller borders.
+
+**Geforce Book**
+- 750GB.
+- 8GB RAM.
+- 1080p camera.
+- Intel Core i9.
+- Windows 10 Pro.
+- Normal-sized laptop.
+- Thick body.
+- Large screen.
+- Small borders.
+
+**Geforce 1st Gen**
+- 1TB.
+- 12GB RAM.
+- 4K camera.
+- AMD Ryzen 3.
+- Windows 11.
+- Normal-sized thin laptop.
+- Large screen.
+- Very small borders.
+
+**Geforce Gaming**
+- 1.5TB.
+- 16GB RAM.
+- 8K camera.
+- AMD Ryzen 5.
+- Windows 11 Pro.
+- Thick keyboard base.
+- RGB keyboard.
+- Detailed side ventilation.
+- Large thin screen.
+- Very small borders.
+
+**Geforce Gaming Pro**
+- 2TB.
+- 16GB RAM.
+- 8K camera.
+- AMD Ryzen 5 Pro.
+- Windows 11 Pro.
+- Advanced red-black gaming chassis.
+- Improved RGB.
+- More elaborate cooling and detailing.
+
+**Geforce Ultra Gaming**
+- 3TB.
+- 64GB RAM.
+- 8K Pro camera.
+- AMD Ryzen 5 Ultra Pro.
+- Windows 12.
+- Futuristic gaming design.
+- Advanced RGB.
+- Premium chassis.
+
+**Geforce Maxed Gaming**
+- 5TB.
+- 128GB RAM.
+- 8K Ultra Pro camera.
+- AMD Ryzen 7.
+- Windows 12 Pro.
+- Ultimate premium laptop design.
+- Black-white metallic finish.
+- Advanced lighting and cooling.
+
+### 3D laptop construction
+
+Build each laptop from separate geometries:
+
+1. Screen.
+2. Screen bezel.
+3. Screen borders.
+4. Hinges.
+5. Keyboard base.
+6. Individual keycaps.
+7. Trackpad.
+8. Front edge.
+9. Side ports.
+10. Cooling vents.
+11. Branding.
+12. Underside.
+
+Never use eight identical models with different colors.
+
+The keyboard base must have actual visible thickness and realistic proportions.
+
+---
+
+# 12. LAPTOP GPU STORE
+
+| GPU | Price | Rarity | Stock |
+|---|---:|---|---:|
+| Intel i3 | $200 | Uncommon | 100% |
+| Intel i5 | $1,000 | Common | 85% |
+| Intel i9 | $2,500 | Rare | 50% |
+| RTX 90 | $5,000 | Epic | 30% |
+| RTX 1090 | $10,000 | Legendary | 10% |
+| RTX 2090 | $20,000 | Mythic | 8% |
+| RTX 3080 | $30,000 | Prismatic | 5% |
+| RTX 4070 | $40,000 | Secret | 2% |
+| RTX 5060 | $50,000 | Secret | 1% |
+| AMD Radeon 9070 | $100,000 | Super-Secret | 0.1% |
+
+Check CPU compatibility before purchase and installation.
+
+After purchasing a laptop, redirect to the GPU Store.
+
+The player must own a compatible GPU before downloading games.
+
+---
+
+# 13. GAME STORE
+
+| Game | Price | Rarity | Stock |
+|---|---:|---|---:|
+| Car Simulator | $1,200 | Uncommon | 100% |
+| Roblox | $2,500 | Common | 75% |
+| Minecraft | $5,000 | Rare | 50% |
+| Maxed-Minecraft Mode | Upgrade | Rare | Requires Minecraft |
+| GTA IV | $10,000 | Epic | 25% |
+| Car Simulator II | $15,000 | Legendary | 10% |
+| Poppy Playtime 4 | $20,000 | Mythic | 5% |
+| GTA V | $25,000 | Secret | 1% |
+| GTA VI | $50,000 | Super Secret | 0.1% |
+
+### Game requirements
+
+**Car Simulator**
+- 125GB.
+- Geforce Mini Book or above.
+- Compatible GPU.
+- Minimum Intel i3.
+- Views: 1–100M.
+- Trend: 10–100M.
+- Multiplier: 1x.
+
+**Roblox**
+- 250GB.
+- Geforce Mini Book Pro or above.
+- Intel i5 or above.
+- Views: 1–100M.
+- Trend: 10–100M.
+- Multiplier: 1.2x.
+
+**Minecraft**
+- 500GB.
+- Geforce Book or above.
+- Intel i5 or above.
+- Views: 1–100M.
+- Trend: 10–100M.
+- Multiplier: 2x.
+
+**Maxed-Minecraft Mode**
+- 2TB.
+- Geforce Gaming Pro or above.
+- RTX 2090 or above, subject to CPU compatibility.
+- Requires normal Minecraft.
+- Views: 10–100M.
+- Trend: 1,000–100M.
+- Multiplier: 5x.
+
+**GTA IV**
+- 1TB.
+- Geforce 1st Gen or above.
+- Original CPU/GPU requirement needs explicit compatibility mapping.
+- Views: 1–100M.
+- Trend: 10–100M.
+- Multiplier: 2.2x.
+
+**Car Simulator II**
+- 1.5TB.
+- Geforce Gaming or above.
+- RTX 1090 or above, subject to compatibility.
+- Views: 1–100M.
+- Trend: 1,000–100M.
+- Multiplier: 2.5x.
+
+**Poppy Playtime 4**
+- 2TB.
+- Geforce Ultra Gaming or above.
+- RTX 3080 or above, subject to compatibility.
+- Views: 10–100M.
+- Trend: 1,000–100M.
+- Multiplier: 3x.
+
+**GTA V**
+- 4TB.
+- Geforce Ultra Gaming or above.
+- RTX 5060 or above, subject to compatibility.
+- Views: 100–100M.
+- Trend: 1,000–100M.
+- Multiplier: 4x.
+
+**GTA VI**
+- 5TB.
+- Geforce Maxed Gaming.
+- AMD Radeon 9070.
+- Views: 1,000–100M.
+- Trend: 10,000–100M.
+- Multiplier: 5x.
+
+Purchasing and downloading are separate.
+
+Validate available storage before installation.
+
+Never charge twice for the same game.
+
+---
+
+# 14. EDITOR STORE
+
+| Editor | Price | Lowest | Highest |
+|---|---:|---:|---:|
+| Self-Editing | $1,200 | 95% | 5% |
+| Helper | $2,000 | 85% | 15% |
+| Advanced Helper | $5,000 | 65% | 35% |
+| Pre-Professional Helper | $15,000 | 50% | 50% |
+| Skilled Helper | $25,000 | 45% | 55% |
+| Professional Helper | $50,000 | 35% | 65% |
+| Ultra-Skilled Helper | $100,000 | 10% | 90% |
+
+The selected editor controls upload probability.
+
+It does not directly multiply video views.
+
+---
+
+# 15. RANK SYSTEM
+
+Ranks depend ONLY on subscribers.
+
+| Rank | Subscribers | Gradient |
+|---|---:|---|
+| Zero | 0 | White |
+| Bronze | 1 | Brown |
+| Bronze II | 100 | Brown |
+| Bronze III | 500 | Brown |
+| Silver | 1,000 | Silver |
+| Silver II | 2,000 | Silver |
+| Silver III | 3,000 | Silver |
+| Gold | 5,000 | Gold |
+| Gold II | 6,000 | Gold |
+| Gold III | 7,000 | Gold |
+| Platinum | 10,000 | Diamond |
+| Platinum II | 15,000 | Diamond |
+| Platinum III | 20,000 | Diamond |
+| Champion | 30,000 | Purple-yellow |
+| Champion II | 40,000 | Purple-yellow |
+| Champion III | 50,000 | Purple-yellow |
+| Max Rank | 100,000 | Animated rainbow |
+
+Always show the highest unlocked rank.
+
+---
+
+# 16. TIER SYSTEM
+
+Tiers depend on lifetime earnings, not balance.
+
+| Tier | Lifetime Earnings | Gradient |
+|---|---:|---|
+| No Tier | $0 | Brown |
+| Beginner | $100 | Yellow |
+| Starter | $1,000 | Green |
+| Advanced | $10,000 | Orange |
+| Professional | $100,000 | Blue |
+| Iconic | $1M | Gold |
+| Sovereign | $50M | Red-black |
+| Legend | $100M | Rainbow |
+| Goat | $1B | Black-white |
+
+Starting money does not count.
+
+Spending money does not reduce lifetime earnings.
+
+Use cumulative thresholds.
+
+---
+
+# 17. BADGES
+
+| Badge | Requirement | Appearance |
+|---|---:|---|
+| 10K | 10,000 | Bronze |
+| 100K | 100,000 | Silver |
+| 1M | 1,000,000 | Gold |
+| 10M | 10,000,000 | Diamond |
+| 100M–999M | Every 100M | Purple-yellow |
+| 1B | 1,000,000,000 | Black-white |
+
+For the 100M–999M badge:
+
+Use:
+
+floor(subscribers / 100000000) × 100000000
+
+Examples:
+
+274M = 200M badge.
+
+300M = 300M badge.
+
+999,999,999 = 900M badge.
+
+1B = 1B badge.
+
+Do not create individual million-level badges.
+
+---
+
+# 18. LEADERBOARDS
+
+Sort global players using subscriber count only.
+
+Display:
+
+- Position.
+- Username.
+- Avatar.
+- Subscribers.
+- Rank.
+- Reward.
+
+Use actual registered player data.
+
+Never fabricate real global player statistics.
+
+---
+
+# 19. PROFILE
+
+Display:
+
+- Username.
+- User ID.
+- Gmail address.
+- Avatar.
+- Subscribers.
+- Views.
+- Earnings.
+- Rank.
+- Tier.
+- Badges.
+- Videos.
+- Hardware.
+- Games.
+- Editors.
+
+Settings:
+
+- Edit username.
+- Change avatar.
+- Change email.
+- Change password.
+- Sound settings.
+- Delete account.
+- Log out.
+
+Changing email or password must use the real authentication provider.
+
+Never store passwords in the player database.
+
+---
+
+# 20. RANKS PAGE
+
+Create sections for:
+
+- Ranks.
+- Tiers.
+- Badges.
+- Milestones.
+- Next tasks.
+
+Display every progression level, including locked levels.
+
+Calculate progress automatically.
+
+---
+
+# 21. SETUP STORE
+
+Display:
+
+COMING SOON.
+
+Future categories:
+
+- Monitors.
+- Keyboards.
+- Mice.
+- Microphones.
+- Headphones.
+- Streaming equipment.
+- Lighting.
+- Desks.
+
+Do not allow fake purchases.
+
+---
+
+# 22. DATA ARCHITECTURE
+
+Use a persistent cloud database.
+
+Suggested structure:
+
+users/{uid}
+users/{uid}/videos/{videoId}
+users/{uid}/inventory/{itemId}
+users/{uid}/achievements/{achievementId}
+
+globalLeaderboard/{uid}
+
+market/stock
+
+market/stockCycles
+
+Use server-side validation for important economic operations.
+
+Do not trust the frontend to determine purchase validity or award money.
+
+### Important security rules
+
+- A player can read and update only permitted fields in their own account.
+- A player cannot arbitrarily change their balance.
+- A player cannot award themselves subscribers.
+- A player cannot award themselves badges.
+- A player cannot modify another player's account.
+- A player cannot manipulate global leaderboard records.
+- Server-authoritative operations handle purchases and video rewards.
+
+Use atomic database transactions for money deductions and rewards.
+
+Prevent duplicate transactions.
+
+---
+
+# 23. PREDICTED BUG PREVENTION
+
+### Authentication bugs
+
+- Account created in frontend but not database.
+- Account not found after logout.
+- Duplicate UID generation.
+- Duplicate player profile creation.
+- Login succeeding without loading player data.
+- Database failure incorrectly reported as wrong password.
+- Session disappearing after refresh.
+- Account deletion leaving orphaned records.
+
+Prevent these using genuine authentication, stable UIDs, recovery logic and persistent cloud records.
+
+### Economy bugs
+
+- Starting balance counts toward tiers.
+- Spending reduces lifetime earnings.
+- Earnings calculated using the wrong multiplier.
+- Double rewards after refresh.
+- Negative balance.
+- Duplicate purchases.
+
+Use centralized calculations and atomic transactions.
+
+### Store bugs
+
+- Stock refreshes on every render.
+- Out-of-stock items can be purchased.
+- Products disappear instead of showing unavailable status.
+- Incompatible GPUs can be installed.
+- Purchases deduct money twice.
+
+Use centralized validation.
+
+### Studio bugs
+
+- Zero views.
+- Incorrect subscriber conversion.
+- Wrong editor probability.
+- Duplicate video uploads.
+- Duplicate earnings.
+- Installed games appearing as uninstalled.
+
+Use unique upload IDs and persistent upload states.
+
+### Progression bugs
+
+- Rank calculated from money.
+- Tier calculated from balance.
+- Badge rounded to nearest 100M.
+- Leaderboard sorted by earnings.
+
+Use the exact formulas specified in this prompt.
+
+---
+
+# 24. REQUIRED TESTING
+
+Do not skip testing.
+
+## Authentication tests
+
+1. Create a new Gmail account.
+2. Confirm authentication UID.
+3. Confirm database profile.
+4. Log out.
+5. Log back in using the same Gmail.
+6. Confirm the same UID.
+7. Confirm the same profile.
+8. Refresh the browser.
+9. Confirm persistence.
+10. Delete the account.
+11. Confirm authentication and associated data deletion.
+
+The most important test is:
+
+SIGN UP → LOG OUT → LOG IN.
+
+It must work.
+
+Repeat this test with a second account to verify account isolation.
+
+## Economy tests
+
+- Starting balance: $5,000.
+- Starting earnings: $0.
+- Starting tier: No Tier.
+- 100 Car Simulator views: $10.
+- 100 GTA IV views: $22.
+- 100 Minecraft views: $20.
+
+## Progression tests
+
+- 1 subscriber = Bronze.
+- 100 subscribers = Bronze II.
+- 10,000 subscribers = Platinum.
+- 100,000 subscribers = Max Rank.
+- $100 earnings = Beginner.
+- $1,000 earnings = Starter.
+- $10,000 earnings = Advanced.
+- $1B earnings = Goat.
+
+## Store tests
+
+- Mini Book required first.
+- GPU compatibility enforced.
+- Storage limits enforced.
+- Stock refreshes every 3 minutes.
+- Out-of-stock purchase blocked.
+
+## Persistence tests
+
+1. Purchase laptop.
+2. Install GPU.
+3. Buy game.
+4. Download game.
+5. Upload video.
+6. Earn money.
+7. Log out.
+8. Log in.
+9. Confirm everything remains saved.
+
+## Visual tests
+
+- No emojis anywhere.
+- All navigation works.
+- All buttons work.
+- Red-black design is consistent.
+- Animations are smooth.
+- Sound toggle works.
+- Desktop and mobile layouts work.
+
+---
+
+# 25. IMPLEMENTATION ORDER
+
+PHASE 1 — Authentication and database.
+
+PHASE 2 — Persistent player profile and economy.
+
+PHASE 3 — Navigation and visual foundation.
+
+PHASE 4 — Store and stock system.
+
+PHASE 5 — Laptop and GPU systems.
+
+PHASE 6 — Game purchasing and installation.
+
+PHASE 7 — Editor system.
+
+PHASE 8 — Studio and upload calculations.
+
+PHASE 9 — Ranks, tiers and badges.
+
+PHASE 10 — Profile and leaderboards.
+
+PHASE 11 — Animations and sounds.
+
+PHASE 12 — Full testing and bug fixing.
+
+Authentication and database persistence must be completed and tested before implementing the rest of the game.
+
+Do not build a beautiful interface on top of a broken account system.
+
+---
+
+# FINAL DEVELOPMENT COMMAND
+
+Build YouTube Studio as a fully functional, persistent, multi-user creator simulator.
+
+The authentication system is a critical requirement.
+
+A user who creates an account must be able to log out, return later and log in using the same Gmail and password.
+
+The same permanent UID must retrieve the same player profile.
+
+Never create temporary accounts.
+
+Never lose player progress.
+
+Never claim registration succeeded without confirming the backend operations.
+
+Never claim Gmail ownership is verified when it is not.
+
+Never use emojis anywhere.
+
+Preserve every specified price, probability, requirement, multiplier, rank, tier and badge threshold.
+
+Use real database persistence, secure authentication and server-authoritative economic operations.
+
+Build in phases, test each phase, fix bugs at their source and perform regression testing.
+
+**YOUTUBE STUDIO**
+
+**CREATED BY GEFORCE.**

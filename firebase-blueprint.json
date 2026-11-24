@@ -1,0 +1,346 @@
+{
+  "entities": {
+    "UserProfile": {
+      "title": "UserProfile",
+      "description": "Persistent YouTube Studio creator account profile, economy balances, progression, and hardware/software inventory.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "description": "Firebase Auth UID",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayId": {
+          "type": "string",
+          "description": "Permanent formatted creator ID (GF-XXXXXXXX)",
+          "minLength": 11,
+          "maxLength": 16,
+          "pattern": "^GF-[A-Z0-9]{8}$"
+        },
+        "username": {
+          "type": "string",
+          "description": "Creator channel display name",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "email": {
+          "type": "string",
+          "format": "email",
+          "description": "Registered Gmail address (PII, owner-only)",
+          "minLength": 5,
+          "maxLength": 120
+        },
+        "avatarId": {
+          "type": "string",
+          "description": "Selected SVG avatar identifier",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "accountStatus": {
+          "type": "string",
+          "enum": ["active"],
+          "description": "Account lifecycle status"
+        },
+        "balance": {
+          "type": "number",
+          "description": "Spendable cash balance in USD"
+        },
+        "totalEarned": {
+          "type": "number",
+          "description": "Cumulative lifetime earnings in USD (drives Tier)"
+        },
+        "totalSpent": {
+          "type": "number",
+          "description": "Cumulative lifetime store spending in USD"
+        },
+        "lifetimeVideoEarnings": {
+          "type": "number",
+          "description": "Cumulative earnings from video uploads in USD"
+        },
+        "subscribers": {
+          "type": "number",
+          "description": "Total subscriber count (drives Rank and Badges)"
+        },
+        "totalViews": {
+          "type": "number",
+          "description": "Total accumulated video views"
+        },
+        "totalVideos": {
+          "type": "number",
+          "description": "Total uploaded video count"
+        },
+        "rank": {
+          "type": "string",
+          "description": "Highest unlocked subscriber rank",
+          "maxLength": 32
+        },
+        "tier": {
+          "type": "string",
+          "description": "Highest unlocked lifetime earnings tier",
+          "maxLength": 32
+        },
+        "badges": {
+          "type": "array",
+          "description": "Unlocked subscriber milestone badge IDs"
+        },
+        "inventory": {
+          "type": "object",
+          "description": "Owned laptops, GPUs, games, editors, and active hardware configuration"
+        },
+        "settings": {
+          "type": "object",
+          "description": "User sound and interface preferences"
+        },
+        "recentSubscribers": {
+          "type": "array",
+          "description": "Recent subscriber milestone events (max 10)"
+        },
+        "lastTransactionId": {
+          "type": "string",
+          "description": "Last atomic transaction nonce for idempotency",
+          "maxLength": 128
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of account creation"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Server timestamp of last profile update"
+        }
+      },
+      "required": [
+        "uid",
+        "displayId",
+        "username",
+        "email",
+        "avatarId",
+        "accountStatus",
+        "balance",
+        "totalEarned",
+        "totalSpent",
+        "lifetimeVideoEarnings",
+        "subscribers",
+        "totalViews",
+        "totalVideos",
+        "rank",
+        "tier",
+        "badges",
+        "inventory",
+        "settings",
+        "recentSubscribers",
+        "createdAt",
+        "updatedAt"
+      ]
+    },
+    "VideoRecord": {
+      "title": "VideoRecord",
+      "description": "Immutable record of an uploaded YouTube Studio video and its calculated results.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "uploadNonce": {
+          "type": "string",
+          "minLength": 8,
+          "maxLength": 128
+        },
+        "title": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 100
+        },
+        "gameId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "gameName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "editorId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "editorName": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "laptopId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "gpuId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "views": {
+          "type": "number"
+        },
+        "subscribersGained": {
+          "type": "number"
+        },
+        "earnings": {
+          "type": "number"
+        },
+        "outcomeTier": {
+          "type": "string",
+          "enum": ["lowest", "highest"]
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "uid",
+        "uploadNonce",
+        "title",
+        "gameId",
+        "gameName",
+        "editorId",
+        "editorName",
+        "laptopId",
+        "gpuId",
+        "views",
+        "subscribersGained",
+        "earnings",
+        "outcomeTier",
+        "createdAt"
+      ]
+    },
+    "TransactionRecord": {
+      "title": "TransactionRecord",
+      "description": "Idempotency and audit ledger record for store purchases and studio rewards.",
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["purchase", "upload_reward", "install", "uninstall", "equip_gpu", "equip_laptop"]
+        },
+        "itemId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 64
+        },
+        "amount": {
+          "type": "number"
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": ["id", "uid", "type", "itemId", "amount", "createdAt"]
+    },
+    "LeaderboardEntry": {
+      "title": "LeaderboardEntry",
+      "description": "Public creator leaderboard entry without PII, sorted globally by subscriber count.",
+      "type": "object",
+      "properties": {
+        "uid": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128,
+          "pattern": "^[a-zA-Z0-9_\\-]+$"
+        },
+        "displayId": {
+          "type": "string",
+          "minLength": 11,
+          "maxLength": 16,
+          "pattern": "^GF-[A-Z0-9]{8}$"
+        },
+        "username": {
+          "type": "string",
+          "minLength": 2,
+          "maxLength": 32
+        },
+        "avatarId": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 40
+        },
+        "subscribers": {
+          "type": "number"
+        },
+        "rank": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "tier": {
+          "type": "string",
+          "maxLength": 32
+        },
+        "totalVideos": {
+          "type": "number"
+        },
+        "updatedAt": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "uid",
+        "displayId",
+        "username",
+        "avatarId",
+        "subscribers",
+        "rank",
+        "tier",
+        "totalVideos",
+        "updatedAt"
+      ]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/UserProfile" },
+      "description": "Private owner-scoped creator profile with economy, inventory, and progression."
+    },
+    "/users/{userId}/videos/{videoId}": {
+      "schema": { "$ref": "#/entities/VideoRecord" },
+      "description": "Creator's uploaded videos subcollection."
+    },
+    "/users/{userId}/transactions/{txId}": {
+      "schema": { "$ref": "#/entities/TransactionRecord" },
+      "description": "Idempotent economic transaction ledger subcollection."
+    },
+    "/globalLeaderboard/{userId}": {
+      "schema": { "$ref": "#/entities/LeaderboardEntry" },
+      "description": "Publicly queryable creator leaderboard sorted by subscribers (no PII)."
+    }
+  }
+}
